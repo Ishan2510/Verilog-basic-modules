@@ -1,0 +1,38 @@
+FULLADDER CODE
+
+
+module fulladd(
+    a,b,c,sum,cout
+);
+input a,b,c;
+output sum,cout;
+    assign sum = a^b^c;
+    assign cout = (a&b) | (a&c) | (b&c);
+endmodule
+
+module testbench;
+reg a,b,c;
+wire sum,cout;
+integer i;
+fulladd FA_1(.a(a),.c(c),.b(b),.sum(s),.cout(carryout));
+initial begin
+
+$monitor($time , "a=%b , b=%b , c=%b , sum=%b ,carryout=%b  ",a,b,c,s,carryout);
+
+    for(i=0;i<8;i++)begin
+        #5 {a,b,c}=i;
+    end
+end
+endmodule
+
+Simulation results
+
+0  a=x , b=x , c=x , sum=x ,carryout=x  
+5  a=0 , b=0 , c=0 , sum=0 ,carryout=0  
+10 a=0 , b=0 , c=1 , sum=1 ,carryout=0  
+15 a=0 , b=1 , c=0 , sum=1 ,carryout=0  
+20 a=0 , b=1 , c=1 , sum=0 ,carryout=1  
+25 a=1 , b=0 , c=0 , sum=1 ,carryout=0  
+30 a=1 , b=0 , c=1 , sum=0 ,carryout=1  
+35 a=1 , b=1 , c=0 , sum=0 ,carryout=1  
+40 a=1 , b=1 , c=1 , sum=1 ,carryout=1  
