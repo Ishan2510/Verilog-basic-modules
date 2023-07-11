@@ -1,0 +1,59 @@
+SHIFT REGISTER(4 BIT)
+
+module shiftreg(
+    a,e,b,c,d,clear,clock
+);
+input wire a,clock,clear;
+output reg e,b,c,d;
+
+always @(posedge clock)begin
+    if(clear)begin
+       e<=0;
+       b<=0;
+       c<=0;
+       d<=0;
+      end
+    else begin
+     b<=a;
+     c<=b;
+     d<=c;
+     e<=d; 
+    end
+end
+endmodule
+
+module testbench ;
+wire e,b,c,d;
+reg a,clock,clear;
+    shiftreg SR(a,e,b,c,d,clear,clock);
+     initial
+        begin
+        clock=1'b0; #2 clear=1; #5 clear = 0;
+        end
+        always #5 clock=~clock;
+        initial begin #2
+                 $monitor("Time=%d , a=%b , clear=%b ,b=%b,c=%b,d=%b e=%b " , $time , a,clear,b,c,d,e);
+                 #10 a=1;
+                 #10 a=0; 
+                 #10 a=1;
+                 #10 a=0;
+                 #140 $finish;
+                end
+endmodule
+
+
+Time=                   2 , a=x , clear=1 ,b=x,c=x,d=x e=x 
+Time=                   5 , a=x , clear=1 ,b=0,c=0,d=0 e=0 
+Time=                   7 , a=x , clear=0 ,b=0,c=0,d=0 e=0 
+Time=                  12 , a=1 , clear=0 ,b=0,c=0,d=0 e=0 
+Time=                  15 , a=1 , clear=0 ,b=1,c=0,d=0 e=0 
+Time=                  22 , a=0 , clear=0 ,b=1,c=0,d=0 e=0 
+Time=                  25 , a=0 , clear=0 ,b=0,c=1,d=0 e=0 
+Time=                  32 , a=1 , clear=0 ,b=0,c=1,d=0 e=0 
+Time=                  35 , a=1 , clear=0 ,b=1,c=0,d=1 e=0 
+Time=                  42 , a=0 , clear=0 ,b=1,c=0,d=1 e=0 
+Time=                  45 , a=0 , clear=0 ,b=0,c=1,d=0 e=1 
+Time=                  55 , a=0 , clear=0 ,b=0,c=0,d=1 e=0 
+Time=                  65 , a=0 , clear=0 ,b=0,c=0,d=0 e=1 
+Time=                  75 , a=0 , clear=0 ,b=0,c=0,d=0 e=0 
+main.v:38: $finish called at 182 (1s)
