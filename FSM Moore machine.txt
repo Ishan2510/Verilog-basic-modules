@@ -1,0 +1,72 @@
+FSM MOORE MACHINE WITH CYCLIC LAMPS
+
+module cyclic_lamp(
+    clock , light
+);
+
+input clock;
+output reg[2:0] light;
+reg [2:0]state;
+parameter S0=0 , S1=1 , S2=2;
+parameter RED=3'b100 , YELLOW = 3'b010 , GREEN=3'b001;
+    always @(posedge clock)begin
+        case(state)
+            S0: begin
+                state<=S1;
+                light = YELLOW ;
+                end
+            S1: begin 
+                state<=S2;
+                light<=GREEN;
+                end
+            S2: begin
+                state<=S0;
+                light<=RED;
+                end
+            default: begin
+                    light <= RED;
+                    state<=S0;
+                    end
+        endcase
+    end
+endmodule
+
+
+
+module testbench;
+wire [2:0]light;
+reg clk;
+
+cyclic_lamp test(clk,light);
+    always #5 clk=~clk;
+    
+    initial begin
+        clk=1'b0;
+        #100 $finish;
+    end
+    initial 
+        begin
+            $dumpfile ("cyclic.vcd");
+            $dumpvars (0, test);
+            
+            $monitor ($time , " RYG : %b " , light);
+        end
+endmodule
+
+
+SIMULATION RESULTS
+
+VCD info: dumpfile cyclic.vcd opened for output.
+0 RYG : xxx 
+                   5 RYG : 100 
+                  15 RYG : 010 
+                  25 RYG : 001 
+                  35 RYG : 100 
+                  45 RYG : 010 
+                  55 RYG : 001 
+                  65 RYG : 100 
+                  75 RYG : 010 
+                  85 RYG : 001 
+                  95 RYG : 100 
+main.v:41: $finish called at 100 (1s)
+
